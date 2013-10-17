@@ -252,11 +252,20 @@ static NSString * const kCellIdentifier = @"BeaconCell";
             proximityString = @"Unknown";
             break;
     }
+    
+    NSString *base64Major = [self base64:beacon.major];
+    NSString *base64Minor = [self base64:beacon.minor];
+    
     defaultCell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@ • %@ • %f • %li",
-        beacon.major.stringValue, beacon.minor.stringValue, proximityString, beacon.accuracy, (long)beacon.rssi];
+        base64Major, base64Minor, proximityString, beacon.accuracy, (long)beacon.rssi];
     defaultCell.detailTextLabel.textColor = [UIColor grayColor];
     
     return defaultCell;
+}
+
+- (NSString*)base64:(NSNumber*)number
+{
+    return [[[number.stringValue dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"="]];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
